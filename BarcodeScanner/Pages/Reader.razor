@@ -1,0 +1,44 @@
+﻿@page "/barcodereader"
+@inject IJSRuntime JSRuntime
+
+<InputFile OnChange="LoadImage" />
+<p class="p-result">@result</p>
+
+<div id="imageview">
+    <img id="image" />
+</div>
+
+@code {
+    String result = "";
+
+    @* https://docs.microsoft.com/en-us/aspnet/core/blazor/images?view=aspnetcore-6.0 *@
+    private async Task LoadImage(InputFileChangeEventArgs e)
+    {
+        result = "";
+
+        var imageFile = e.File;
+        var jsImageStream = imageFile.OpenReadStream(1024 * 1024 * 20);
+        var dotnetImageStream = new DotNetStreamReference(jsImageStream);
+        await JSRuntime.InvokeAsync<byte[]>("jsFunctions.setImageUsingStreaming",
+        "image", dotnetImageStream);
+    }
+
+    protected override void OnInitialized()
+    {
+    }
+
+
+    public async Task ReadBarcodes()
+    {
+        await JSRuntime.InvokeVoidAsync(
+        "jsFunctions.selectFile");
+    }
+
+    [JSInvokable]
+    public void ReturnBarcodeResultsAsync(String text)
+    {
+        result = text;
+        StateHasChanged();
+    }
+
+}

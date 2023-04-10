@@ -1,0 +1,46 @@
+@page "/barcodescanner"
+
+@inject IJSRuntime JSRuntime
+
+<button @onclick="Scan">Camera Scan</button>
+
+@code {
+    String result = "";
+
+    @* https://docs.microsoft.com/en-us/aspnet/core/blazor/images?view=aspnetcore-6.0 *@
+    private async Task LoadImage(InputFileChangeEventArgs e)
+    {
+        result = "";
+
+        var imageFile = e.File;
+        var jsImageStream = imageFile.OpenReadStream(1024 * 1024 * 20);
+        var dotnetImageStream = new DotNetStreamReference(jsImageStream);
+        await JSRuntime.InvokeAsync<byte[]>("jsFunctions.setImageUsingStreaming",
+        "image", dotnetImageStream);
+    }
+
+    protected override void OnInitialized()
+    {
+    }
+
+
+    public async Task ReadBarcodes()
+    {
+        await JSRuntime.InvokeVoidAsync(
+        "jsFunctions.selectFile");
+    }
+
+    public async Task Scan()
+    {
+        await JSRuntime.InvokeVoidAsync(
+        "jsFunctions.liveScan");
+    }
+
+    [JSInvokable]
+    public void ReturnBarcodeResultsAsync(String text)
+    {
+        result = text;
+        StateHasChanged();
+    }
+
+}
