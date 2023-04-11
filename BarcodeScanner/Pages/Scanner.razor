@@ -2,10 +2,19 @@
 
 @inject IJSRuntime JSRuntime
 
-<button @onclick="Scan">Camera Scan</button>
+<div class="select">
+    <label for="videoSource">Video source: </label>
+    <select id="videoSource"></select>
+</div>
+
+<div id="videoview">
+    <div class="dce-video-container" id="videoContainer"></div>
+    <canvas id="overlay"></canvas>
+</div>
 
 @code {
     String result = "";
+    private DotNetObjectReference<Scanner> objRef;
 
     @* https://docs.microsoft.com/en-us/aspnet/core/blazor/images?view=aspnetcore-6.0 *@
     private async Task LoadImage(InputFileChangeEventArgs e)
@@ -21,20 +30,19 @@
 
     protected override void OnInitialized()
     {
+        //objRef = DotNetObjectReference.Create(this);
+        
     }
 
-
-    public async Task ReadBarcodes()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeVoidAsync(
-        "jsFunctions.selectFile");
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
+        }
     }
 
-    public async Task Scan()
-    {
-        await JSRuntime.InvokeVoidAsync(
-        "jsFunctions.liveScan");
-    }
 
     [JSInvokable]
     public void ReturnBarcodeResultsAsync(String text)
@@ -43,4 +51,8 @@
         StateHasChanged();
     }
 
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
 }

@@ -3,8 +3,6 @@
 @inject NavigationManager NavigationManager
 @using Microsoft.AspNetCore.Components.Web;
 
-<h1>.NET MAUI Blazor Demo</h1>
-
 @if (initialized == false)
 {
     <p>Initializing Dynamsoft Barcode Reader SDK...</p>
@@ -26,7 +24,7 @@ else {
 
     public async void Init()
     {
-        initialized = await JSRuntime.InvokeAsync<Boolean>("jsFunctions.init", DotNetObjectReference.Create(this));
+        initialized = await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initSDK");
         StateHasChanged();
     }
 
