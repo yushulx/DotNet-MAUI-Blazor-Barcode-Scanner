@@ -160,6 +160,7 @@ window.jsFunctions = {
         document.getElementById(imageId).style.display = 'block';
         initOverlay(document.getElementById(overlayId));
         if (reader) {
+            reader.maxCvsSideLength = 9999
             decodeImage(dotnetRef, url, blob);
         }
 
