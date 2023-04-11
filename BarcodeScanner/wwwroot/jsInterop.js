@@ -93,8 +93,6 @@ function returnResultsAsString(dotnetRef, results) {
             barcoderesults = 'No barcode found';
         }
 
-        console.log(barcoderesults);
-
         if (dotnetRef) {
             dotnetRef.invokeMethodAsync('ReturnBarcodeResultsAsync', barcoderesults);
         }
@@ -134,7 +132,7 @@ function showResults(results) {
             }
 
             if (dotnetHelper) {
-                dotnetHelper.invokeMethodAsync('ReturnBarcodeResultsAsync', results);
+                returnResultsAsString(dotnetHelper, results);
             }
         }
 
