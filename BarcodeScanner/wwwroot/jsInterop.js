@@ -7,6 +7,7 @@ let context = null;
 let dotnetHelper = null;
 let videoSelect = null;
 let cameraInfo = {};
+let videoElement = null;
 
 function initOverlay(ol) {
     overlay = ol;
@@ -149,8 +150,63 @@ async function openCamera() {
     }
 }
 
+function gotDevices(deviceInfos) {
+	for (var i = deviceInfos.length - 1; i >= 0; --i) {
+		var deviceInfo = deviceInfos[i];
+		var option = document.createElement('option');
+		option.value = deviceInfo.deviceId;
+		if (deviceInfo.kind === 'videoinput') {
+			option.text = deviceInfo.label || 'camera ' + (videoSelect.length + 1);
+			videoSelect.appendChild(option);
+		} else {
+			console.log('Found one other kind of source/device: ', deviceInfo);
+		}
+	}
+}
+
+function getStream() {
+	if (window.stream) {
+		window.stream.getTracks().forEach(function (track) {
+			track.stop();
+		});
+	}
+
+	var constraints = {
+		video: {
+			deviceId: videoSelect.value,
+			width: { min: 640 },
+			height: { min: 480 },
+		}
+	};
+
+	navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch(handleError);
+}
+
+function gotStream(stream) {
+	window.stream = stream;
+	videoElement.srcObject = stream;
+	// videoElement.addEventListener("loadedmetadata", function (e) {
+	// 	width = this.videoWidth;
+	// 	height = this.videoHeight;
+	// 	console.log(width, height);
+	// 	canvas.width = width;
+	// 	canvas.height = height;
+	// 	canvasWebGL.width = width;
+	// 	canvasWebGL.height = height;
+	// 	canvas2d.width = width;
+	// 	canvas2d.height = height;
+	// 	overlay.width = width;
+	// 	overlay.height = height;
+
+	// }, false);
+}
+
+function handleError(error) {
+	console.log('Error: ', error);
+}
+
 window.jsFunctions = {
-    setImageUsingStreaming: async function setImageUsingStreaming(dotnetRef, overlayId, imageId, imageStream) {
+    setImageUsingStreaming: async function (dotnetRef, overlayId, imageId, imageStream) {
         const arrayBuffer = await imageStream.arrayBuffer();
         const blob = new Blob([arrayBuffer]);
         const url = URL.createObjectURL(blob);
@@ -162,6 +218,14 @@ window.jsFunctions = {
             decodeImage(dotnetRef, url, blob);
         }
 
+    },
+    test: async function() {
+        videoElement = document.getElementById('myvideo');
+        videoSelect = document.querySelector('select#videoSource');
+        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch(handleError);
+
+        videoSelect.onchange = getStream;
+        return true;
     },
     initSDK: async function () {
         if (reader != null) {

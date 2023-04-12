@@ -18,7 +18,7 @@ else {
 </div>
 }
 
-
+<video muted autoplay id="myvideo" playsinline="true"></video>
 
 
 @code {
@@ -66,8 +66,8 @@ else {
             {
                 StateHasChanged();
                 objRef = DotNetObjectReference.Create(this);
-                await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
-                
+                //await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
+                await JSRuntime.InvokeAsync<Boolean>("jsFunctions.test");
             }
         }
     }

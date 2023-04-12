@@ -58,8 +58,10 @@ public static class MauiProgram
 
             var config = view.Configuration;
             config.AllowsInlineMediaPlayback = true;
+            config.MediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypes.None;
+            config.MediaPlaybackRequiresUserAction = false;
 
-            return view;
+            return new WKWebView(view.Frame, config);
         }
     }
 #endif
@@ -75,9 +77,9 @@ public static class MauiProgram
 			}).ConfigureMauiHandlers(handlers =>
             {
 #if ANDROID || IOS || MACCATALYST
-            handlers.AddHandler<BlazorWebView, MauiBlazorWebViewHandler>();
+                handlers.AddHandler<BlazorWebView, MauiBlazorWebViewHandler>();
 #endif
-});
+            });
 
 
 
