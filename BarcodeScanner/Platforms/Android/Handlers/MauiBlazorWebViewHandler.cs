@@ -27,7 +27,8 @@ namespace BarcodeScanner.Platforms.Android.Handlers
         {
             try
             {
-                request.Grant(request.GetResources());
+                string[] requests = new string[] { PermissionRequest.ResourceVideoCapture };
+                request.Grant(requests);
                 base.OnPermissionRequest(request);
             }
             catch (Exception ex)

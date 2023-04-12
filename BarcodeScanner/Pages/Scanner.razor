@@ -2,7 +2,12 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="select">
+@if (isGranted == false)
+{
+    <p>Camera is not accessible!</p>
+}
+else {
+    <div class="select">
     <label for="videoSource">Video source: </label>
     <select id="videoSource"></select>
 </div>
@@ -11,8 +16,13 @@
     <div class="dce-video-container" id="videoContainer"></div>
     <canvas id="overlay"></canvas>
 </div>
+}
+
+
+
 
 @code {
+    private bool isGranted = false;
     String result = "";
     private DotNetObjectReference<Scanner> objRef;
 
@@ -31,15 +41,34 @@
     protected override void OnInitialized()
     {
         //objRef = DotNetObjectReference.Create(this);
-        
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            objRef = DotNetObjectReference.Create(this);
-            await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+            if (status == PermissionStatus.Granted)
+            {
+                isGranted = true;
+            }
+            else
+            {
+                status = await Permissions.RequestAsync<Permissions.Camera>();
+                if (status == PermissionStatus.Granted)
+                {
+                    isGranted = true;
+                }
+            }
+
+            if (isGranted)
+            {
+                StateHasChanged();
+                objRef = DotNetObjectReference.Create(this);
+                await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
+                
+            }
         }
     }
 

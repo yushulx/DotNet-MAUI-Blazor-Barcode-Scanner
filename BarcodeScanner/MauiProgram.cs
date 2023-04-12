@@ -17,9 +17,9 @@ public static class MauiProgram
 			}).ConfigureMauiHandlers(handlers =>
             {
 #if ANDROID
-                    handlers.AddHandler<BlazorWebView, MauiBlazorWebViewHandler>();
+                    //handlers.AddHandler<BlazorWebView, MauiBlazorWebViewHandler>();
 #endif
-            });
+			});
 
         builder.Services.AddMauiBlazorWebView();
 		#if DEBUG

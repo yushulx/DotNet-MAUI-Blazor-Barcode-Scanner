@@ -6,4 +6,10 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    async void OnTakePhotoButtonClicked(object sender, EventArgs e)
+	{
+		await Navigation.PushAsync(new WebContentPage());
+
+    }
 }
