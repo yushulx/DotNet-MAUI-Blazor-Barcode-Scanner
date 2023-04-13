@@ -9,6 +9,12 @@ This repository contains a .NET MAUI (Multi-platform App UI) Blazor application 
 
 To run the application on your web browser, please visit [https://github.com/yushulx/blazor-barcode-qrcode-reader-scanner](https://github.com/yushulx/blazor-barcode-qrcode-reader-scanner). 
 
+**Known Issue**
+
+`WKWebView` does not support `getUserMedia()` on macOS.
+
+![.NET MAUI blazor barcode scanner software](https://www.dynamsoft.com/codepool/img/2023/04/maui-macos-webview-camera-error.png)
+
 ## Prerequisites
 
 - [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
