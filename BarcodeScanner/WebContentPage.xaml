@@ -5,7 +5,7 @@
              x:Class="BarcodeScanner.WebContentPage"
              Title="WebContentPage"
 	     BackgroundColor="{DynamicResource PageBackgroundColor}">
-    <BlazorWebView HostPage="wwwroot/index.html">
+    <BlazorWebView x:Name="webView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type local:WebContent}" />
         </BlazorWebView.RootComponents>

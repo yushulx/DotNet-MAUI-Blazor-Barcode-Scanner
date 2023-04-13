@@ -19,8 +19,6 @@ else {
 }
 
 
-
-
 @code {
     private bool isGranted = false;
     String result = "";
@@ -67,7 +65,6 @@ else {
                 StateHasChanged();
                 objRef = DotNetObjectReference.Create(this);
                 await JSRuntime.InvokeAsync<Boolean>("jsFunctions.initScanner", objRef, "videoContainer", "videoSource", "overlay");
-                
             }
         }
     }

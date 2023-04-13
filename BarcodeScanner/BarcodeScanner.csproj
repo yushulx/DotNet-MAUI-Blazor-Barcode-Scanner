@@ -31,6 +31,15 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' and '$(Configuration)' == 'Debug'">
+      <CodeSignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodeSignEntitlements>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)'=='net6.0-ios'">
+      <ProvisioningType>manual</ProvisioningType>
+      <CodesignKey>Apple Development: Catherine Sea (952V28WT6F)</CodesignKey>
+    </PropertyGroup>
+
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
